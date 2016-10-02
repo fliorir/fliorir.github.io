@@ -27,6 +27,34 @@
   })();
 
 </script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+
+    google.load("feeds", "1");
+
+    function initialize() {
+      var feed = new google.feeds.Feed("http://blog.fliorir.com/feeds/posts/default");
+      feed.load(function(result) {
+        if (!result.error) {
+          var container = document.getElementById("feed");
+          for (var i = 0; i < 3; i++) {
+            var entry = result.feed.entries[i];
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.appendChild(document.createTextNode(entry.title));
+            a.setAttribute('href', entry.link);
+            li.appendChild(a);
+            container.appendChild(li);
+          }
+        }
+      });
+    }
+    google.setOnLoadCallback(initialize);
+
+</script>
+
 </head>
 <body>
 
@@ -54,18 +82,10 @@
 				<li class="secondaryheading">Последни съобщения</li>
 
 			</ul>
-<!--			
-			<script language="JavaScript" src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fblog.fliorir.com%2Ffeeds%2Fposts%2Fdefault&num=3&utf=y"  charset="UTF-8" type="text/javascript"></script>
+
 			
-			<noscript>
-			<a href="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fblog.fliorir.com%2Ffeeds%2Fposts%2Fdefault&num=3&utf=y&html=y">View RSS feed</a>
-			</noscript>
--->
-			
-<script language="JavaScript" src="http://www.fliorir.com/feed2js/feed2js-test.php" type="text/javascript"></script>
-<!--
-<a href="http://svetilnik.fliorir.com" title="Svetilnik"><img style="padding : 0px 0px 0px 0px;" src="svetilnik_8.jpg" /></a>
- //-->
+<!-- https://developers.google.com/feed/v1/devguide#getting-started -->
+<ul id="feed"></ul>
 
 		</div>
 
