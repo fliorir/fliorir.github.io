@@ -1,0 +1,10 @@
+#!/bin/bash
+for f in *.htm
+do
+if  ! isutf8  $f &> /dev/null 
+then
+	iconv -f WINDOWS-1251 -t UTF-8 "$f" > tmp
+	echo "$f"
+	cp tmp "$f"
+fi
+done
