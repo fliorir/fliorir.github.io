@@ -43,7 +43,7 @@
             var entry = result.feed.entries[i];
             var li = document.createElement("li");
             var a = document.createElement("a");
-            a.appendChild(document.createTextNode(entry.title));
+            a.appendChild(document.createTextNode(entry.title.replace(/&quot;/g, '"')));
             a.setAttribute('href', entry.link);
             li.appendChild(a);
             container.appendChild(li);
