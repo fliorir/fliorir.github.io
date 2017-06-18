@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+
+  <style>
+    circle.dimple-series-1 {
+      fill: red;
+    }
+    
+    h2 {
+      text-align: center;
+    }
+    
+    text.dimple-tooltip {
+      font-size: 20px !important;
+      font-family: "Times New Roman", Times, serif !important;
+    }
+
+  </style>
+
+  <script type="text/javascript">
+    function draw(data) {
+
+      /*
+        D3.js setup code
+      */
+
+      "use strict";
+      var margin = 75,
+        width = 1200 - margin,
+        height = 1600 - margin;
+
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width + margin)
+        .attr("height", 800)
+        .append('g')
+        .attr('class', 'chart');
+
+      // calculate square root of PagesViewed for better visualization in bubble
+      data.forEach(function(d) {
+        d.Iteractions = Math.sqrt(d['PagesViewed']);
+
+      });
+
+      var myChart = new dimple.chart(svg, data);
+      myChart.addLegend(0, 10, 800, 20, "right");
+
+      var x = myChart.addLogAxis("x", "Visits");
+      x.overrideMin = 1; // x axis to start from 1
+      x.fontSize = "auto";
+      x.title = "Readers (visits)";
+
+      var y = myChart.addMeasureAxis("y", "Ratio");
+      y.title = "Pages viewed per visit";
+      y.fontSize = "auto";
+
+      var z = myChart.addMeasureAxis("z", "Iteractions");
+      z.title = "Total pages viwed"
+
+      var mySeries = myChart.addSeries(["Title", "Type"], dimple.plot.bubble);
+      debugger;
+
+      /*
+        Custom tooltips to solve the problem of dimple bubble area to size convertion
+      */
+      mySeries.getTooltipText = function(e) {
+        return [
+          "Type: " + e.aggField[1],
+          "Title: " + e.aggField[0],
+          "Visitors " + e.xValue,
+          "Pages viewed per visit:  " + e.yValue,
+          "Total pages read: " + Math.round(e.zValue * e.zValue)
+        ];
+      };
+
+      myChart.draw();
+
+    };
+
+  </script>
+</head>
+
+<body>
+  <h2>Book popularity, Fliorir Publishing House, March 2015</h2>
+  <p>The number of visits (horizontal axis), pages per visit (vertical axis) and pages viewed (bubble area) are presented for books with full access in
+    <a href="http://books.google.com/books?q=inpublisher:fliorir&rview=1">Google Books</a>.
+    <br /> Books are coloured by category.
+  </p>
+
+  <script type="text/javascript">
+    /*
+    Use D3 (not dimple.js) to load the TSV file
+    and pass the contents of it to the draw function
+    */
+    d3.tsv("GoogleBooksList2.tsv", draw);
+  </script>
+</body>
+
+</html>

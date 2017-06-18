@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+    
+    <style>
+ 
+
+      h2 {
+        text-align: center;
+      }
+      
+      rect.dimple-tooltip {
+        padding-left: 80px  !important;
+      }
+
+      text.dimple-tooltip {
+        font-size: 20px !important;
+        font-family: "Times New Roman", Times, serif  !important;
+      }
+      text.dimple-axis:nth-of-type(3) {
+          fill: red;
+      }
+      g.dimple-axis:nth-of-type(4) {
+          fill: red;
+      }
+      
+    </style>
+
+    <script type="text/javascript">
+      function draw(data) {
+      
+      /*
+        D3.js setup code
+      */
+
+          "use strict";
+          var margin = 75,
+              width = 1200 - margin,
+              height = 1600 - margin;
+                
+          var svg3 = d3.select("body")
+            .append("svg")
+              .attr("width", width + margin)
+              .attr("height", 800)
+            .append('g')
+                .attr('class','chart');             
+
+      /*
+        Dimple.js Chart construction code
+      */
+          /*data = data.sort(function(a, b) { return b.PagesViewed - a.PagesViewed; });*/
+
+          var myChart = new dimple.chart(svg3, data);
+          myChart.setBounds(80, 30, 1050, 500)
+          var x = myChart.addCategoryAxis("x", "Title"); 
+          var yAxis = myChart.addMeasureAxis("y", "Visits");
+          yAxis.title = "Readers per month";
+          var yAxis2 = myChart.addMeasureAxis("y", "Ratio");
+          yAxis2.title = "Pages Viewed per visit";
+          yAxis2.fontSize = "auto";
+          x.addOrderRule("Type");
+          x.addOrderRule("PagesViewed", true);
+          myChart.assignColor("PagesPerVisit", "#222222", "#000000", 0.1);
+          /*var mySeries = myChart.addSeries("Pages Viewed", dimple.plot.bar, [x, yAxis2]);*/
+          var mySeries = myChart.addSeries("Type", dimple.plot.bar);
+          /*myChart.addColorAxis("Ratio", ["green", "yellow", "red"]);*/
+          var mySeries2 = myChart.addSeries("Type", dimple.plot.bubble, [x, yAxis2]);
+          myChart.addLegend(0, 10, 800, 20, "right");
+      
+    // Override the standard tooltip behaviour   
+    mySeries.addEventHandler("mouseover", function (e){
+
+        // Draw the text information in the top left corner
+        svg3.selectAll(".dimple-hover-text")
+          .data(["Title: " + e.xValue, 'Visits: '+ d3.format(",.f")(e.yValue)], e.cValue)
+            .enter()
+            .append("text")
+            .attr("class", "dimple-hover-text")
+            .attr("x", myChart._xPixels() + 250)
+            .attr("y", function (d, i) { return myChart._yPixels() + 80 + i * 25; })
+            .style("text-anchor", "start")
+            .style("font-size", "20px")
+            .style("fill", "black")
+            .style("pointer-events", "none")
+            .text(function (d) { return d; });
+
+      });
+      
+      // Clear the text on exit
+      mySeries.addEventHandler("mouseleave", function (e) {
+        svg3.selectAll(".dimple-hover-text").remove();
+      });
+          
+          myChart.draw();
+          
+        };
+
+    </script>
+  </head>
+<body>
+  <h2>Book popularity, Fliorir Publishing House, March 2015</h2>
+  <p>Presented is the monthly number of readers (bars) and number of pages per visit 
+  (dots) as reported by 
+  <a href="http://books.google.com/books?q=inpublisher:fliorir&rview=1">Google Books</a>.
+  </p>
+  
+  <script type="text/javascript">
+  /*
+    Use D3 (not dimple.js) to load the TSV file
+    and pass the contents of it to the draw function
+    */
+  d3.tsv("GoogleBooksList2.tsv", draw);
+  </script>
+</body>
+</html>
