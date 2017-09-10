@@ -1,0 +1,11 @@
+<div  itemscope itemtype="http://schema.org/Book">
+<a href="details/{book_id}.htm"><img src="thumbnails/{book_id}_small.jpg" alt="{title}" /></a>
+<span><b><a href="details/{book_id}.htm" itemprop="url">{title_caps}</a></b></span><br />
+<i>/<span>{book_class}</span>/</i>
+<p>
+<i>Автор: {author}<br/>
+  ...   </i>
+</p>
+<p>{summary}</p>
+<p></p>
+</div>
