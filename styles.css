@@ -225,3 +225,8 @@ a img,:link img,:visited img {
     overflow:auto;
 }
 
+
+
+.stih {padding-left:10%;}
+.ref {text-align: center;  font-weight: bold;}
+.auth {text-align: right;  font-weight: bold; padding-right:5%;}

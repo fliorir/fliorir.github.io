@@ -224,6 +224,11 @@ a img,:link img,:visited img {
     float:left;
 }
 
+
+.stih {padding-left:10%;}
+.ref {text-align: center;  font-weight: bold;}
+.auth {text-align: right;  font-weight: bold; padding-right:5%;}
+
 @media (max-width: 709px) {
     #content {
     	font-size : 18px;
